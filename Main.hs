@@ -1,5 +1,7 @@
 module Main where
 import Catalog
+import Validation
+import CSV
 import System.IO
 
 myfile = "comics.csv"
@@ -7,57 +9,32 @@ myfile = "comics.csv"
 inputSingle :: IO ()
 inputSingle = do
   putStrLn "Enter Title:"
-  t <- getLine
+  t' <- getLine
+  let t = read_t t'
   putStrLn "Enter Issue Number"
   i' <- getLine
-  let i = read i':: Int
+  let i = read_i i'
   putStrLn "Enter Format: Hardcover, Trade, or Loose"
   f' <- getLine
-  let f = readF f'
+  let f = read_f f'
   putStrLn "Enter Publisher name:"
-  p <- getLine
+  p' <- getLine
+  let p = read_p p'
   putStrLn "Enter Writers (separate with semicolon)"
   w' <- getLine
-  let w = (readL w')
+  let w = (read_w w')
   putStrLn "Enter artists"
   a' <- getLine
-  let a = (readL a')
+  let a = (read_a a')
   putStrLn "Enter colorists"
   c' <- getLine
-  let c = (readL c')
+  let c = (read_c c')
   putStrLn "Enter Year of Publication"
   y' <- getLine
-  let y = readY y'
+  let y = read_y y'
   let issue = Issue t i f p w a c y
   appendFile myfile (makeCSVLine issue)
-{-
-inputMultiple :: IO ()
-inputMultiple = do
-    putStrLn "Enter Title:"
-  t <- getLine
-  putStrLn "Enter Issue Numbers"
-  i' <- getLine
-  let i = makeIssueList i'
-  putStrLn "Enter Format: Hardcover, Trade, or Loose"
-  f' <- getLine
-  let f = readF f'
-  putStrLn "Enter Publisher name:"
-  p <- getLine
-  putStrLn "Enter Writers (separate with semicolon)"
-  w' <- getLine
-  let w = (readL w')
-  putStrLn "Enter artists"
-  a' <- getLine
-  let a = (readL a')
-  putStrLn "Enter colorists"
-  c' <- getLine
-  let c = (readL c')
-  putStrLn "Enter Year of Publication"
-  y' <- getLine
-  let y = readY y'
- -- let issues =  Issue t i f p w a c y
-  appendFile myfile (concat (map makeCSVLine issues))
--}             
+           
 getComics :: IO [Issue]
 getComics = do
   handle <- openFile "comics.csv" ReadMode
