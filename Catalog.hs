@@ -15,7 +15,15 @@ data Issue = Issue { title :: String
                    , colorists :: [String]
                    , year :: (Maybe Int)
                    } deriving (Eq, Show)
-
+{-
+makeIssueList :: String -> [Int]
+makeIssueList "" = []
+makeIssueList s = concat
+                  (map makeRanges
+                           (wordsWhen (== ',') s)) where
+                      makeRanges s' = makeRanges' (wordsWhen (== ':') s'
+                                                             makeRanges' s'' = 
+ -}
 showci :: Show a => a -> String
 showci s = (show s) ++ ","
 
