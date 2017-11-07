@@ -56,3 +56,18 @@ validYear y = case readMaybe y of
                 Just i -> (0 <= i) && (i <= 3000)
                 Nothing -> False
 read_y = readValidate readYear validYear
+
+
+
+getIssueList "" = Nothing
+getIssueList s = Just (concat (map myIntParse (splitOn "," s))) where
+  myIntParse s = case readMaybe s :: Maybe Int of
+    (Just i) -> [i]
+    Nothing -> myIntRangeParse s where
+      myIntRangeParse s = makeRange (map read (splitOn "-" s) :: [Int]) where
+        makeRange [a, b]  = [a..b]
+     
+  
+--getIssueList :: String -> Maybe [Int]
+
+
