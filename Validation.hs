@@ -4,7 +4,8 @@ import Text.Read (readMaybe)
 import Data.List.Split (splitOn)
 import Catalog
 
-readValidate :: Read a => (String -> a) -> (String -> Bool) -> String -> Checked a
+readValidate :: Read a =>
+                (String -> a) -> (String -> Bool) -> String -> Checked a
 readValidate _ _ "" = Empty
 readValidate _ _ "N/A" = Empty
 readValidate readFun validFun s = case validFun s of
@@ -53,21 +54,29 @@ read_c = readValidate readColorists validColorists
 
 readYear y = read y :: Int
 validYear y = case readMaybe y of
-                Just i -> (0 <= i) && (i <= 3000)
+                Just i -> (0 >= i) && (i <= 3000)
                 Nothing -> False
 read_y = readValidate readYear validYear
 
-
-
-getIssueList "" = Nothing
-getIssueList s = Just (concat (map myIntParse (splitOn "," s))) where
+getIssueList :: String -> [Checked Int]
+getIssueList "" = [Empty]
+getIssueList s = map Good (concat (map myIntParse (splitOn "," s))) where
   myIntParse s = case readMaybe s :: Maybe Int of
     (Just i) -> [i]
     Nothing -> myIntRangeParse s where
       myIntRangeParse s = makeRange (map read (splitOn "-" s) :: [Int]) where
         makeRange [a, b]  = [a..b]
      
-  
---getIssueList :: String -> Maybe [Int]
+issueFromNumber
+  :: (Checked String,
+      Checked Format,
+      Checked String,
+      Checked [String],
+      Checked [String],
+      Checked [String],
+      Checked Int)
+     -> Checked Int -> Issue
+issueFromNumber (t, f, p, w, a, c, y) i = Issue t i f p w a c y
+
 
 
